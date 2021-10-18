@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ml-model
+  name: wine-model
   labels:
-    app: ml-model
+    app: wine-model
 spec:
   selector:
     matchLabels:
-      app: ml-model
+      app: wine-model
   replicas: 2
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: ml-model
+        app: wine-model
     spec:
       containers:
-        - name: fastapi-ml-model
-          image: rhun/ml-model:0.1.0
+        - name: fastapi-wine-model
+          image: rhun/wine-classification:0.1
           imagePullPolicy: Always
           env:
             - name: ENABLE_METRICS
@@ -32,11 +32,11 @@ spec:
               containerPort: 80
           resources:
             requests:
-              memory: 1Gi
-              cpu: "0.75"
+              memory: 0.5Gi
+              cpu: "0.25"
             limits:
-              memory: 2Gi
-              cpu: "1"
+              memory: 1Gi
+              cpu: "0.5"
           livenessProbe:
             httpGet:
               path: /api/v1/status/health
@@ -46,12 +46,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ml-model-service
+  name: wine-model-service
   labels:
-    app: ml-model
+    app: wine-model
 spec:
   selector:
-    app: ml-model
+    app: wine-model
   ports:
     - name: app
       port: 80
@@ -61,16 +61,16 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: ml-model-servicemonitor
+  name: wine-model-servicemonitor
   # must by the same namespace that Prometheus is running in
   namespace: monitoring
   labels:
-    app: ml-model
+    app: wine-model
     release: prometheus-stack
 spec:
   selector:
     matchLabels:
-      app: ml-model
+      app: wine-model
   endpoints:
     - path: metrics
       port: app
