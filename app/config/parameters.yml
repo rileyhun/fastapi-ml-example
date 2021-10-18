@@ -1,0 +1,19 @@
+rollbar:
+    enabled:     true
+    token:       redacted
+    environment: dev
+    serverhost:  host
+database:
+    ml_services:
+        username: root
+        password: set_as_secret
+        host: host.docker.internal
+        database: ml_services
+newrelic:
+    appname: ml-model
+    license: redacted
+    enabled: true
+    verbose: false
+auth: fakevalue
+
+
